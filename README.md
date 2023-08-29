@@ -6,7 +6,7 @@ The key feature of Lermo AI is its ability to generate personalized learning con
 
 # Getting Started
 
-## Use Case: Video Creator Assistance
+## Use Case: AI Video Assistant
 
 With LermoAI's Video Creator Assistance feature, instructors can leverage the power of AI to generate customized learning content by providing all the necessary information and customizing it according to their preferences and requirements.
 
