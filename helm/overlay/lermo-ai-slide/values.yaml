@@ -1,0 +1,36 @@
+nameOverride: lermo-ai-slide
+replicaCount: 1
+# imagePullSecrets:
+#   name: gcr-credential
+image:
+  repository: lerm0/lermo-ai-slide
+  tag: latest
+  pullPolicy: Always
+containerPorts:
+  - 8080
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  # limits:
+  #   cpu: 1100m
+  #   memory: 1Gi
+type: ClusterIP
+default:
+  ports:
+    - name: http-api
+      externalPort: 80
+      internalPort: 8080
+      protocol: TCP
+# healthCheck:
+#   port: 8080
+#   path: /
+
+podAntiAffinity: true
+
+envFrom:
+    envFrom:
+    - configMapRef:
+        name: lermo-ai-slide-env
+#     - secretRef:
+#         name: app-secret

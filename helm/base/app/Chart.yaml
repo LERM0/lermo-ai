@@ -1,0 +1,7 @@
+apiVersion: v1
+description: base application.
+name: app
+version: 1.0.0
+maintainers:
+- name: champ
+  email: champ.patyatawee@gmail.com

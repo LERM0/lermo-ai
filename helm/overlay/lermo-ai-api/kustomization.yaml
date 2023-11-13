@@ -1,0 +1,15 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+helmGlobals:
+  chartHome: ../../base
+helmCharts:
+  - name: app
+    valuesFile: values.yaml
+    namespace: app
+    releaseName: lermo-ai-api
+
+namespace: app
+# resources:
+#   - ingressroute.yaml
+#   - configmap.yaml
+#   - secret.yaml

@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "lermo-ai-slide"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9.0,<3.12"
+uvicorn = "^0.23.2"
+fastapi = "^0.101.1"
+langchain = "^0.0.310"
+faiss-cpu = "^1.7.4"
+instructorembedding = "^1.0.1"
+llama-cpp-python = "^0.2.11"
+torch = {version = "^2.1.0+cpu", source = "pytorch"}
+torchvision = {version = "^0.16.0+cpu", source = "pytorch"}
+tqdm = ">=4.64.*,<=5.0.0"
+sentence-transformers = "^2.2.2"
+fastllama = "^0.0.1.dev0"
+llama-index = "^0.8.48"
+redis = "^5.0.1"
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,157 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        autopatch: ""
+    spec:
+      {{- if .Values.podAntiAffinity }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 10
+            podAffinityTerm:
+              labelSelector:
+                  matchExpressions:
+                    - key: "release"
+                      operator: In
+                      values:
+                      - {{ .Release.Name }}
+              topologyKey: "kubernetes.io/hostname"
+      {{- end }}
+      {{- if .Values.securityContext }}
+      securityContext:
+{{ toYaml .Values.securityContext | indent 8 }}
+      {{- end}}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets.name }}
+      {{- end }}
+      terminationGracePeriodSeconds: 10
+      
+      containers:
+        - name: {{ template "name" . }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.workingDir }}
+          workingDir: {{ .Values.workingDir }}
+          {{- end }}
+          {{- if .Values.command }}
+          command:
+            {{- range .Values.command }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
+
+          {{- if .Values.envFrom }}
+{{ toYaml .Values.envFrom | indent 10 }}
+          {{- end }}
+
+          {{- if .Values.containerPorts }}
+          ports:
+            {{- range .Values.containerPorts }}
+            - containerPort: {{ . }}
+            {{- end }}
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.volumeMounts }}
+            {{- range .Values.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              subPath: {{ .subPath }}
+              {{- if .readOnly }}
+              readOnly: true
+              {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.healthCheck }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: {{ .Values.healthCheck.port }}
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healthCheck.path }}
+              port: {{ .Values.healthCheck.port }}
+            initialDelaySeconds: 60
+            timeoutSeconds: 1
+            periodSeconds: 15
+          {{- end }}
+          {{- if .Values.resources }}
+          resources:
+            {{- if .Values.resources.requests }}
+            requests:
+              {{- if .Values.resources.requests.cpu }}
+              cpu: "{{ .Values.resources.requests.cpu }}"
+              {{- end }}
+              {{- if .Values.resources.requests.memory }}
+              memory: "{{ .Values.resources.requests.memory }}"
+              {{- end }}
+            {{- end }}
+            {{- if .Values.resources.limits }}
+            limits:
+              {{- if .Values.resources.limits.cpu }}
+              cpu: "{{ .Values.resources.limits.cpu }}"
+              {{- end }}
+              {{- if .Values.resources.limits.memory }}
+              memory: "{{ .Values.resources.limits.memory }}"
+              {{- end }}
+            {{- end }}
+          {{- end }}
+  {{- if .Values.volumes }}
+  {{- if .Values.volumes.volumes }}
+      volumes:
+        {{- range .Values.volumes.volumes }}
+        - name: {{ .name }}
+          {{- if .hostPath }}
+          hostPath:
+            path: {{ .hostPath }}
+          {{- else if .secret }}
+          secret:
+            secretName: {{ .secret }}
+          {{- else if .configMap }}
+          configMap:
+            name: {{ .configMap }}
+          {{- else if .emptyDir }}
+{{ toYaml .emptyDir | indent 10 }}
+          {{- else if .persistentVolumeClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .persistentVolumeClaim.claimName }}
+            {{- if .persistentVolumeClaim.readOnly }}
+            readOnly: {{ .persistentVolumeClaim.readOnly }}
+            {{- end }}
+          {{- else }}
+          {{- end }}
+        {{- end }}
+  {{- end }}
+  {{- end }}

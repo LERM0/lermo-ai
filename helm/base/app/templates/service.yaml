@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  {{- if .Values.annotations }}
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
+  name: {{ template "name" . }}{{- with .Values.suffixName }}-{{ . }}{{- end }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  type: {{ .Values.type }}
+  ports:
+    {{- range .Values.default.ports }}
+    - name: {{ .name }}
+      protocol: {{ .protocol }}
+      port: {{ .externalPort }}
+      targetPort: {{ .internalPort }}
+    {{- end }}
+  selector:
+    app: {{ template "name" . }}
+
+{{- if .Values.haveHeadless }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "name" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+spec:
+  clusterIP: None
+  ports:
+    {{- range .Values.default.ports }}
+    - name: {{ .name }}
+      protocol: {{ .protocol }}
+      port: {{ .externalPort }}
+      targetPort: {{ .internalPort }}
+    {{- end }}
+  selector:
+    app: {{ template "name" . }}
+{{- end }}
