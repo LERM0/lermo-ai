@@ -20,6 +20,7 @@ sentence-transformers = "^2.2.2"
 fastllama = "^0.0.1.dev0"
 llama-index = "^0.8.48"
 redis = "^5.0.1"
+python-dotenv="1.0.0"
 
 [[tool.poetry.source]]
 name = "pytorch"

@@ -1,0 +1,37 @@
+.DS_Store
+.env
+
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore the virtual environment
+venv/
+
+# Ignore compiled Helm templates
+*.yaml
+*.tpl
+
+# Ignore generated manifests
+*.manifests.yaml
+*.manifests.json
+
+# Ignore Helm chart dependencies
+charts/
+
+# Ignore Helm chart package files
+*.tgz
+
+# Ignore Helm chart release files
+*.release
+
+# Ignore Helm chart lock file
+Chart.lock
+
+
+codellama-7b-instruct.Q4_K_M.gguf
+
+*.rdb
+
+test.html

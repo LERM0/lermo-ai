@@ -1,4 +1,4 @@
-nameOverride: finddive-api
+nameOverride: xxx
 replicaCount: 2
 # imagePullSecrets:
 #   name: gcr-credential

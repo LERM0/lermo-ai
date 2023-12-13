@@ -1,13 +1,13 @@
-nameOverride: finddive-api
-replicaCount: 2
+nameOverride: lermo-ai-voice
+replicaCount: 1
 # imagePullSecrets:
 #   name: gcr-credential
 image:
-  repository: gcr.io/xx/xx
-  tag: build-xxx
+  repository: lerm0/lermo-ai-voice
+  tag: latest
   pullPolicy: Always
 containerPorts:
-  - 4000
+  - 8081
 resources:
   requests:
     cpu: 100m
@@ -20,17 +20,18 @@ default:
   ports:
     - name: http-api
       externalPort: 80
-      internalPort: 4000
+      internalPort: 8081
       protocol: TCP
+
 healthCheck:
-  port: 4000
-  path: /
+  port: 8081
+  path: /ping
 
 podAntiAffinity: true
 
-envFrom:
-    envFrom:
-    - configMapRef:
-        name: app-configmap
-    - secretRef:
-        name: app-secret
+# envFrom:
+#     envFrom:
+#     - configMapRef:
+#         name: app-configmap
+#     - secretRef:
+#         name: app-secret

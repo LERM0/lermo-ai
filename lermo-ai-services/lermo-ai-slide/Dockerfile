@@ -1,11 +1,13 @@
-FROM lerm0/lermo-ai-slide
+FROM python:3.10
+RUN apt update
+RUN pip install poetry
 
 WORKDIR /app
 
 COPY . .
 
-RUN poetry install
+RUN poetry lock && poetry install
 
-EXPOSE 8080
+EXPOSE 8082
 
 ENTRYPOINT poetry run python main.py

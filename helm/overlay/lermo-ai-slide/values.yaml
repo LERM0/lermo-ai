@@ -4,10 +4,10 @@ replicaCount: 1
 #   name: gcr-credential
 image:
   repository: lerm0/lermo-ai-slide
-  tag: latest
+  tag: pre-release-0.0.1
   pullPolicy: Always
 containerPorts:
-  - 8080
+  - 8082
 resources:
   requests:
     cpu: 100m
@@ -20,10 +20,10 @@ default:
   ports:
     - name: http-api
       externalPort: 80
-      internalPort: 8080
+      internalPort: 8082
       protocol: TCP
 # healthCheck:
-#   port: 8080
+#   port: 8082
 #   path: /
 
 podAntiAffinity: true

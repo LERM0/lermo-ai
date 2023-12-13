@@ -6,4 +6,9 @@ COPY . .
 
 EXPOSE 8081
 
-ENTRYPOINT poetry run python main.py
+RUN pip install -r requirements.txt
+
+
+
+# pip install dotenv && pip freeze > requirements.txt
+# ENTRYPOINT python main.py
